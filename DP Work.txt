@@ -1,0 +1,378 @@
+Agreegation 
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Aggregation
+{
+    class Department
+    {
+        string name;
+        Employee person;
+        public Department(string name, Employee person)
+        {
+            this.name = name;
+            this.person = person;
+        }
+        public string PrintDeptDetails()
+        {
+            string COCIS;
+            COCIS = name + " "+ person.PrintPerson();
+            return COCIS;
+        }
+
+    }
+
+    class Employee
+    {
+        string name;
+        int age;
+        public Employee(string name, int age)
+        {
+            this.name = name;
+            this.age = age;
+        }
+        public string PrintPerson()
+        {
+            string employeeDetails;
+            employeeDetails = name + " " + age;
+            return employeeDetails;
+        }
+    }
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Employee emp = new Employee("Osama", 22);
+            Department dp = new Department("COCIS", emp);
+            Console.WriteLine(dp.PrintDeptDetails());
+            Console.ReadLine();
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+Agreegation by value (Composition)
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Composition
+{
+    public class Logger
+    {
+        public void Log(string message)
+        {
+            Console.WriteLine(message);
+        }
+    }
+
+    public class DataMigrator
+    {
+        Logger log= new Logger();
+        public void printMessage()
+        {
+            log.Log("Message...");
+        }
+    }
+   
+    public class Program
+    {
+        static void Main(string[] args)
+        {
+            DataMigrator dataMigrator = new DataMigrator();
+            dataMigrator.printMessage();
+        }
+    }
+}
+
+
+
+
+
+Strategy Pattern
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Strategy_pattern_DP_Assignment
+{
+    ///Muhammad Osama Nadeem
+    ///Sid : 10052
+
+    public interface TravelStrategy
+    {
+        void GoingUni();
+    }
+
+    public class Bus : TravelStrategy
+    {
+        public void GoingUni()
+        {
+            Console.WriteLine("I am going to university by Bus");
+        }
+    }
+
+    public class Bike : TravelStrategy
+    {
+        public void GoingUni()
+        {
+            Console.WriteLine("I am going to university by Bike");
+        }
+    }
+
+    public class Context
+    {
+        private TravelStrategy travelStrategy;
+        
+        public void SetTravelStrategy(TravelStrategy travelStrategy)
+        {
+            this.travelStrategy = travelStrategy;
+        }
+
+        public void gotoUni()
+        {
+            travelStrategy.GoingUni();
+        }
+    }
+
+    public class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Please enter Travel Type : \n Bus or Bike");
+            string travelType = Console.ReadLine();
+            Console.WriteLine("Travel type is : " + travelType);
+            Context ctx = null;
+            ctx = new Context();
+            if ("Bus".Equals(travelType, StringComparison.InvariantCultureIgnoreCase))
+            {
+                ctx.SetTravelStrategy(new Bus());
+            }
+            else if ("Bike".Equals(travelType, StringComparison.InvariantCultureIgnoreCase))
+            {
+                ctx.SetTravelStrategy(new Bike());
+            }
+
+            ctx.gotoUni();
+            Console.Read();
+        }
+    }
+}
+
+
+
+
+
+Factory Method 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Factory_method
+{
+    //creating interface
+    public interface CreditCard
+    {
+        string GetCardType();
+        int GetCreditLimit();
+        int GetAnnualCharge();
+    }
+
+    //creating concrete product
+    public class Platinum : CreditCard
+    {
+        public string GetCardType()
+        {
+            return "Platinum";
+        }
+        public int GetCreditLimit()
+        {
+            return 35000;
+        }
+        public int GetAnnualCharge()
+        {
+            return 2000;
+        }
+    }
+
+    public class Titanium:CreditCard
+    {
+        public string GetCardType()
+        {
+            return "Titanium";
+        }
+        public int GetCreditLimit()
+        {
+            return 15000;
+        }
+        public int GetAnnualCharge()
+        {
+            return 2000;
+        }
+    }
+    public class MoneyBack : CreditCard
+    {
+        public string GetCardType()
+        {
+            return "MoneyBack";
+        }
+        public int GetCreditLimit()
+        {
+            return 25000;
+        }
+        public int GetAnnualCharge()
+        {
+            return 3500;
+        }
+    }
+
+    //creating abstract creator
+    public abstract class CreditCardFactory
+    {
+        protected abstract CreditCard MakeProduct();
+
+        public CreditCard CreateProduct()
+        {
+            return this.MakeProduct();
+        }
+    }
+
+    //creating concrete creator
+    public class MoneyBackFactory : CreditCardFactory
+    {
+        protected override CreditCard MakeProduct()
+        {
+            CreditCard product= new MoneyBack();
+            return product;
+        }
+    }
+
+    public class TitaniumFactory : CreditCardFactory
+    {
+        protected override CreditCard MakeProduct()
+        {
+            CreditCard product = new Titanium();
+            return product;
+        }
+    }
+
+    public class PlatinumFactory : CreditCardFactory
+    {
+        protected override CreditCard MakeProduct()
+        {
+            CreditCard product = new Platinum();
+            return product;
+        }
+    }
+
+
+    public class Program
+    {
+        static void Main(string[] args)
+        {
+            CreditCard creditCard = new PlatinumFactory().CreateProduct();
+            if(creditCard != null)
+            {
+                Console.WriteLine("Card Type : " + creditCard.GetCardType());
+                Console.WriteLine("Credit Limit : " + creditCard.GetCreditLimit());
+                Console.WriteLine("Annual Charge :" + creditCard.GetAnnualCharge());
+            }
+            else
+            {
+                Console.WriteLine("Invalid Card");
+            }
+            Console.WriteLine("--------------------");
+            creditCard=new MoneyBackFactory().CreateProduct();
+            if (creditCard != null)
+            {
+                Console.WriteLine("Card Type : " + creditCard.GetCardType());
+                Console.WriteLine("Credit Limit : " + creditCard.GetCreditLimit());
+                Console.WriteLine("Annual Charge :" + creditCard.GetAnnualCharge());
+            }
+            else
+            {
+                Console.Write("Invalid Card Type");
+            }
+            Console.ReadLine();
+        }
+    }
+}
+
+
+
+
+
+
+Low Coupling and creator
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Creator
+{
+    public class University
+    {
+        public List<Department> departments = new List<Department>();
+        public void CreateDepartment(string name, string director)
+        {
+            Department department = new Department(name, director);
+            departments.Add(department);
+        }
+        public void getAllDepartment()
+        {
+            for(int i = 0; i < departments.Count; i++)
+            {
+                Console.WriteLine("Department : "+departments[i].name+" Director : "+departments[i].director);
+            }
+        }
+    }
+
+    public class Department
+    {
+        public string name;
+        public string director;
+        public Department(string name, string director)
+        {
+            this.name = name;
+            this.director = director;
+        }
+    }
+    public class Program
+    {
+        static void Main(string[] args)
+        {
+            University uni =new University();
+            uni.CreateDepartment("COCIS", "Khalid Khan");
+            uni.CreateDepartment("BBA", "Hamza");
+            uni.getAllDepartment();
+            Console.ReadLine();
+        }
+    }
+}
+
+
+
+
